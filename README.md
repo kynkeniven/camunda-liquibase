@@ -82,3 +82,9 @@ Quando uma nova versão do Camunda for lançada:
 liquibase update --changelog-file=liquibase/camunda-changelog.xml --url=jdbc:postgresql://localhost:5432/camunda --username=admin --password=admin
 ```
 
+## Scripts Liquibase Dentro do Projeto
+
+1. O Camunda já vem com os scripts liquibase dentro do jar camunda-engine-$version.jar
+2. Basta apontar no yaml ou rodar o camunda update para o changelog abaixo
+
+``org/camunda/bpm/engine/db/liquibase/camunda-changelog.xml``
