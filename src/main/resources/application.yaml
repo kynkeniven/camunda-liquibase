@@ -4,14 +4,14 @@ server:
 
 #datasource
 spring:
-  liquibase:
-    enabled: true
-    change-log: classpath:liquibase/camunda-changelog.xml
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/camunda
     username: admin
     password: admin
+  liquibase:
+    enabled: true
+    change-log: classpath:org/camunda/bpm/engine/db/liquibase/camunda-changelog.xml
   hikari:
     connectionTimeout: 20000
     maximum-pool-size: 100

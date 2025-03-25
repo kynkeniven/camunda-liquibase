@@ -82,9 +82,48 @@ Quando uma nova versão do Camunda for lançada:
 liquibase update --changelog-file=liquibase/camunda-changelog.xml --url=jdbc:postgresql://localhost:5432/camunda --username=admin --password=admin
 ```
 
-## Scripts Liquibase Dentro do Projeto
+## ⚠️ Scripts Liquibase Dentro do Projeto
 
-1. O Camunda já vem com os scripts liquibase dentro do jar camunda-engine-$version.jar
-2. Basta apontar no yaml ou rodar o camunda update para o changelog abaixo
+Existe uma maneira mais eficiente de trabalhar com liquibase no Camunda, onde os scripts do liquibase
+já vem dentro do external jar camunda-engine.
+Basta apontar para o camunda-changelog.xml localizado no jar e criar o plugin maven do 
+liquibase para que os scripts sejam rodados.
 
-``org/camunda/bpm/engine/db/liquibase/camunda-changelog.xml``
+- YAML apontando para o changelog no external jar
+```yaml
+spring:
+    liquibase:
+        enabled: true
+        change-log: classpath:org/camunda/bpm/engine/db/liquibase/camunda-changelog.xml
+
+```
+
+- Plugin maven do liquibase que vai pegar o changelog e os scripts do jar camunda-engine.
+```pom
+ <plugin>
+    <groupId>org.liquibase</groupId>
+    <artifactId>liquibase-maven-plugin</artifactId>
+    <version>${liquibase.version}</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>update</goal>
+            </goals>
+        </execution>
+    </executions>
+    <configuration>
+        <changeLogFile>org/camunda/bpm/engine/db/liquibase/camunda-changelog.xml</changeLogFile>
+        <url>jdbc:postgresql://localhost:5432/camunda</url>
+        <username>admin</username>
+        <password>admin</password>
+    </configuration>
+</plugin>
+```
+
+- Comando para criar/atualizar banco de dados
+Lembrando que como o Camunda não está gerando o BD, é necesario rodar o comando antes de rodar o Camunda.
+```sh
+mvn clean liquibase:update
+```
+- Ao atualizar a versão do Camunda no POM, os novos scripts do liquibase ja serão incorporados.
+- Basta rodar o comando acima ou reiniciar o Camunda, que a migração do BD via liquibase irá ocorrer.
