@@ -119,9 +119,15 @@ spring:
     </configuration>
 </plugin>
 ```
+- Depends On para o Camunda se conectar ao banco somente apos o liquibase rodar
+```java
+@Configuration
+@DependsOn("liquibase")
+public class CamundaConfig {
+}
+```
 
-- Comando para criar/atualizar banco de dados
-Lembrando que como o Camunda não está gerando o BD, é necesario rodar o comando antes de rodar o Camunda.
+- Comando para criar/atualizar banco de dados (Se tiver o depends on acima, nem precisa rodar o comando abaixo)
 ```sh
 mvn clean liquibase:update
 ```
